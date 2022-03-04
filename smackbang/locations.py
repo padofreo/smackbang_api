@@ -24,3 +24,6 @@ def get_city_location(cities):
     result.reset_index(inplace = True)
     result.drop(columns="index", inplace =True)
     return result
+
+if __name__ == '__main__':
+    print(get_city_location(['SYD']))
