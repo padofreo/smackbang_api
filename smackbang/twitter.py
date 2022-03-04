@@ -2,16 +2,25 @@ from textblob import TextBlob
 import tweepy
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
+from dotenv import load_dotenv, find_dotenv
 import re
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from smackbang.matches import get_matches
 
-consumerKey = "PqA88zMUxSwVZi5hJpKdVKT4L"
-consumerSecret = "WQ1xDXrygO4US93heMenGkj5z6DZeUQrZDIyoACAVZqtzulpPc"
-accessToken = "1499085994561310727-p9J1gRV1tsLrVowGCvinw3lEvMHB5z"
-accessTokenSecret = "zVxDSNXC8qmv2ZR5ZD6bE7rT0EmaRewTJxakYlQx89ncL"
+env_path = find_dotenv()
+load_dotenv(env_path)
+TWITTER_CONSUMER_KEY = os.getenv('TWITTER_CONSUMER_KEY')
+TWITTER_CONSUMER_SECRET = os.getenv('TWITTER_CONSUMER_SECRET')
+TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
+TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
+
+consumerKey = TWITTER_CONSUMER_KEY
+consumerSecret = TWITTER_CONSUMER_SECRET
+accessToken = TWITTER_ACCESS_TOKEN
+accessTokenSecret = TWITTER_ACCESS_TOKEN_SECRET
 auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
 auth.set_access_token(accessToken, accessTokenSecret)
 api = tweepy.API(auth)
