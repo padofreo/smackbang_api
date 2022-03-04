@@ -92,3 +92,17 @@ deploy_heroku:
 
 run_api:
 	uvicorn api.fast:app --reload  # load web server with code autoreload
+
+
+# ----------------------------------
+#         FAST API COMMANDS
+# ----------------------------------
+
+docker_build:
+	-@docker build --tag=smackbang_api .
+
+docker_run_it:
+	-@docker run -it -e PORT=8000 -p 8000:8000 smackbang_api sh
+
+docker_run_production:
+	-@docker run -e PORT=8000 -p 8000:8000 smackbang_api

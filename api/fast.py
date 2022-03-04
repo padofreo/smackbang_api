@@ -21,6 +21,8 @@ def matches(origin_one='NRT', origin_two='SYD', departure_date='01/04/2022', con
 
     matches_df = get_matches(origin_one, origin_two, departure_date, continent, return_date='', currency='USD')
 
-    result = matches_df.to_dict(orient='split')
+    matches_df.columns = ['_'.join(col) for col in matches_df.columns.values]
+
+    result  = matches_df.to_dict(orient='dict')
 
     return result
