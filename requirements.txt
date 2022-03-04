@@ -37,3 +37,9 @@ folium
 python-dotenv
 fastapi
 uvicorn
+
+#twitter.py
+regex
+nltk
+textblob
+tweepy

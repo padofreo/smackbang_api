@@ -1,7 +1,13 @@
 import numpy as np
 import pandas as pd
 import requests
+import os
+from dotenv import load_dotenv, find_dotenv
 from requests.structures import CaseInsensitiveDict
+
+env_path = find_dotenv()
+load_dotenv(env_path)
+TEQUILA_API_KEY = os.getenv('TEQUILA_API_KEY')
 
 def get_matches(origin_one, origin_two, departure_date, continent, return_date, currency):
     '''
@@ -33,7 +39,7 @@ def get_matches(origin_one, origin_two, departure_date, continent, return_date, 
     # creating headers
     headers = CaseInsensitiveDict()
     headers["accept"] = "application/json"
-    headers["apikey"] = "Ul0VynVifRdwPUGTkFU_Btfro1vyewb7"
+    headers["apikey"] = TEQUILA_API_KEY
 
     # creating query string to be used in get request
     query_string = {'fly_from':origins, 'fly_to':fly_to,
