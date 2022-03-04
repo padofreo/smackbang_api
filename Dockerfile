@@ -8,5 +8,6 @@ RUN pip install -r requirements.txt
 COPY api /api
 COPY smackbang /smackbang
 COPY data /data
+COPY .env /.env
 
 CMD uvicorn api.fast:app --host 0.0.0.0 --port $PORT
