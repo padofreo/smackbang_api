@@ -43,3 +43,4 @@ regex
 nltk
 textblob
 tweepy
+matplotlib
