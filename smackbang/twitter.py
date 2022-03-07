@@ -90,13 +90,16 @@ def analyze_tweet(cities):
 
         #Output a simplified DF
         def count_values_in_column(data,feature):
-
-            total=data.loc[:,feature].value_counts(dropna=False)
-            percentage=round(data.loc[:,feature].value_counts(dropna=False,normalize=True)*100,2)
-            df= pd.concat([total,percentage],axis=1,keys=["Total","Percentage"])
-            df["City"] = city
-            df["Verdict"] = thumb(df["Total"].loc["negative"], df["Total"].loc["neutral"], df["Total"].loc["positive"])
-            list_df.append(df)
+            new_df = pd.DataFrame({"Score":["neutral","positive","negative"],"Total":[0,0,0], "Percentage":[0,0,0]})
+            new_df.set_index("Score",inplace =True)
+            new_df["Total"] = data.loc[:,feature].value_counts(dropna=False)
+            new_df["Percentage"]=round(data.loc[:,feature].value_counts(dropna=False,normalize=True)*100,2)
+            new_df = new_df.fillna(0)
+            new_df["City"] = city
+            new_df["Verdict"] = thumb(new_df["Total"].loc["negative"],
+                                      new_df["Total"].loc["neutral"],
+                                      new_df["Total"].loc["positive"])
+            list_df.append(new_df)
 
 
         #Count_values for sentiment
