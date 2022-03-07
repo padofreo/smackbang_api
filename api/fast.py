@@ -47,3 +47,33 @@ def twitter(keywords='Bangkok,New Zealand,Russia,Dhaka'):
     df = analyze_tweet(keywords_list)
     result  = df.to_dict()
     return result
+
+@app.get("/predict")
+def predict(df): #input params from matches_df
+    # todo find out the input params for the endpoint
+    # what data and columns types is the model.joblib expecting
+    # do any preprocessing
+    # create the dataframe to pass to model.joblib
+
+
+
+
+    my_dict = dict(Airline=[Airline],
+             source = [origin],
+             destination= [city_to],
+             origin_lon = [],
+             origin_lat = [],
+             destination_lon = [],
+             destination_lat = [],
+             departure_time = [formated_departure_local],
+             arrival_time = [formatted_arrival_local],
+             duration = [formatted_duration])
+
+    X_pred = pd.DataFrame(my_dict)
+
+    pipeline = joblib.load('model.joblib')
+
+    result = pipeline.predict(X_pred)[0]
+
+    return {
+        "fare": result
