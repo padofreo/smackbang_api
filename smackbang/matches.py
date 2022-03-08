@@ -35,7 +35,7 @@ def get_matches(origin_one, origin_two, departure_date, continent, return_date, 
     if origin_two in destinations_list:
         destinations_list.remove(origin_two)
     fly_to = ','.join(destinations_list)
-    print(fly_to)
+
     # creating headers
     headers = CaseInsensitiveDict()
     headers["accept"] = "application/json"
@@ -75,12 +75,9 @@ def get_matches(origin_one, origin_two, departure_date, continent, return_date, 
     # outputting the cheapest flight for each route and sort values by the common destination
     df = df.groupby('route').min().sort_values('cityTo')
 
-    print(df)
-
     # creating pivot table to compare flights from origin_one and orign_two to common destination
     df = df.pivot(index='cityTo', columns='cityFrom', values=['price','duration','total_stops','distance','local_departure','local_arrival','deep_link'])
 
-    print(df)
     # creating new column for combined price
     df['combined_price'] = df['price'].iloc[:,0] + df['price'].iloc[:,1]
 

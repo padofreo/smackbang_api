@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from smackbang.matches import get_matches
 from smackbang.twitter import analyze_tweet
 from smackbang.locations import get_city_location
+from smackbang.preprocess import DateFormatter, DateEncoder, TimeFeaturesEncoder, haversine_vectorized, DistanceTransformer, duration_process, set_preproc_pipeline
 from textblob import TextBlob
 import tweepy
 import matplotlib.pyplot as plt
@@ -11,7 +12,18 @@ import re
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
+import multipart
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import FunctionTransformer
+from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import set_config
+import joblib
+import xgboost
 
 app = FastAPI()
 
@@ -48,32 +60,9 @@ def twitter(keywords='Bangkok,New Zealand,Russia,Dhaka'):
     result  = df.to_dict()
     return result
 
-@app.get("/predict")
-def predict(df): #input params from matches_df
-    # todo find out the input params for the endpoint
-    # what data and columns types is the model.joblib expecting
-    # do any preprocessing
-    # create the dataframe to pass to model.joblib
-
-
-
-
-    my_dict = dict(Airline=[Airline],
-             source = [origin],
-             destination= [city_to],
-             origin_lon = [],
-             origin_lat = [],
-             destination_lon = [],
-             destination_lat = [],
-             departure_time = [formated_departure_local],
-             arrival_time = [formatted_arrival_local],
-             duration = [formatted_duration])
-
-    X_pred = pd.DataFrame(my_dict)
-
-    pipeline = joblib.load('model.joblib')
-
-    result = pipeline.predict(X_pred)[0]
-
-    return {
-        "fare": result
+@app.post("/predict")
+def upload_file(file: UploadFile = File(...)):
+    X = pd.read_csv(file.file)
+    model = joblib.load('../model.joblib')
+    preds = model.predict(X)
+    return {'preds': [float(pred) for pred in preds]}
