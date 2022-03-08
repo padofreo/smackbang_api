@@ -112,7 +112,7 @@ if __name__ == "__main__":
     # continent = "AS"
     # currency = "USD"
 
-    result = get_matches(origin_one='LHR', origin_two='SIN', departure_date='01/04/2022', continent='AS', return_date='', currency='USD')
+    result = get_matches(origin_one='LHR', origin_two='SIN', departure_date='01/04/2022', continent='EU', return_date='', currency='USD')
     print(result)
 
     #print(df)
