@@ -9,5 +9,6 @@ COPY api /api
 COPY smackbang /smackbang
 COPY data /data
 COPY .env /.env
+COPY model.joblib /model.joblib
 
 CMD uvicorn api.fast:app --host 0.0.0.0 --port $PORT

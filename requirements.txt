@@ -23,6 +23,7 @@ google-cloud-storage
 mlflow
 s3fs
 requests
+python-multipart
 
 # utilities
 six>=1.14
@@ -45,3 +46,4 @@ nltk
 textblob
 tweepy
 matplotlib
+geopy

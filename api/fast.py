@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from smackbang.matches import get_matches
 from smackbang.twitter import analyze_tweet
 from smackbang.locations import get_city_location
+from smackbang.preprocess import DateFormatter, DateEncoder, TimeFeaturesEncoder, haversine_vectorized, DistanceTransformer, duration_process, set_preproc_pipeline
 from textblob import TextBlob
 import tweepy
 import matplotlib.pyplot as plt
@@ -11,7 +12,18 @@ import re
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
+import multipart
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import FunctionTransformer
+from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import set_config
+import joblib
+import xgboost
 
 app = FastAPI()
 
@@ -47,3 +59,10 @@ def twitter(keywords='Bangkok,New Zealand,Russia,Dhaka'):
     df = analyze_tweet(keywords_list)
     result  = df.to_dict()
     return result
+
+@app.post("/predict")
+def upload_file(file: UploadFile = File(...)):
+    X = pd.read_csv(file.file)
+    model = joblib.load('../model.joblib')
+    preds = model.predict(X)
+    return {'preds': [float(pred) for pred in preds]}
