@@ -34,7 +34,7 @@ city_list = matches_df.index.values
 #Sentiment Analysis
 
 def analyze_tweet(cities):
-    noOfTweet = 2000
+    noOfTweet = 200
     list_df= []
     for city in cities:
 
