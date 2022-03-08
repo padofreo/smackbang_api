@@ -44,3 +44,4 @@ nltk
 textblob
 tweepy
 matplotlib
+geopy
