@@ -98,7 +98,7 @@ def get_matches(origin_one, origin_two, departure_date, continent, return_date, 
             df.loc[city,'lon']=list(airports_df[airports_df['city']==city]['lon'])[0]
 
     # return top 20 common destinations by price
-    return df.head(20).dropna()
+    return df.head(10).dropna()
 
 if __name__ == "__main__":
     ## user input
