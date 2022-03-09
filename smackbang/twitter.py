@@ -84,9 +84,9 @@ def analyze_tweet(cities):
 
         def thumb(neg,neu,pos):
             if pos+(neu/2) >= neg+(neu/2):
-                return "👍"
+                return ("../data/thumbs_up_green.ico")
             else:
-                return "👎"
+                return ("../data/thumbs_down_red.ico")
 
         #Output a simplified DF
         def count_values_in_column(data,feature):

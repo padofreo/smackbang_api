@@ -102,14 +102,14 @@ def get_matches(origin_one, origin_two, departure_date, continent, return_date, 
 
 if __name__ == "__main__":
     ## user input
-    # origin_one = 'NRT'
-    # origin_two = 'SYD'
-    # depature_date = '01/04/2022'
-    # return_date = ""
-    # continent = "AS"
-    # currency = "USD"
+    origin_one = 'NRT'
+    origin_two = 'SYD'
+    depature_date = '01/04/2022'
+    return_date = ""
+    continent = "AS"
+    currency = "USD"
 
-    df = get_matches()
+    df = get_matches(origin_one,origin_two,depature_date,return_date,continent,currency)
     print(df)
 
 
