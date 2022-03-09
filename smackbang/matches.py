@@ -109,9 +109,14 @@ if __name__ == "__main__":
     continent = "AS"
     currency = "USD"
 
+<<<<<<< HEAD
     df = get_matches(origin_one,origin_two,depature_date,return_date,continent,currency)
     print(df)
 
+=======
+    result = get_matches(origin_one='LHR', origin_two='SIN', departure_date='01/04/2022', continent='EU', return_date='', currency='USD')
+    print(result)
+>>>>>>> master
 
     #print(df)
     # running tests
