@@ -1,5 +1,5 @@
 import requests
-import shutil
+#import shutil
 
 def get_photo(city):
     #the response of this is a JSON file that generates a photo reference
@@ -12,10 +12,11 @@ def get_photo(city):
 
     #make another request for a photo response
     photo_url = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={api_key}&maxwidth=400&maxheight=400'
-    response_photo = requests.request("GET",photo_url, stream=True)
+    response_photo = requests.request("GET",photo_url)
 
+    return response_photo.links
     #save it
-    if response_photo.status_code == 200:
-        with open(f'{city}.png', 'wb') as f:
-            response_photo.raw.decode_content = True
-            shutil.copyfileobj(response_photo.raw, f)
+    #if response_photo.status_code == 200:
+        #with open(f'{city}.png', 'wb') as f:
+            #response_photo.raw.decode_content = True
+            #shutil.copyfileobj(response_photo.raw, f)
