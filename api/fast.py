@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from smackbang.matches import get_matches
 from smackbang.twitter import analyze_tweet
 from smackbang.locations import get_city_location
+from smackbang.photos import get_photo
 from smackbang.preprocess import DateFormatter, DateEncoder, TimeFeaturesEncoder, haversine_vectorized, DistanceTransformer, duration_process, set_preproc_pipeline
 from textblob import TextBlob
 import tweepy
@@ -59,6 +60,23 @@ def twitter(keywords='Bangkok,New Zealand,Russia,Dhaka'):
     df = analyze_tweet(keywords_list)
     result  = df.to_dict()
     return result
+
+@app.get("/photos")
+def twitter(cities='Bangkok,New Zealand,Russia,Dhaka'):
+    urls = []
+    for city in cities:
+        #the response of this is a JSON file that generates a photo reference
+        api_key = "AIzaSyCMMb6QvT3xndUa0Phh5o2S2NWhmAKa5-A"
+        url = f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={city}&key={api_key}&inputtype=textquery&fields=name,photos'
+        response = requests.request("GET", url).json()
+        #the reference that we need to get the photo
+        photo_ref = response["candidates"][0]["photos"][0]["photo_reference"]
+        #make another request for a photo response and return url list
+        photo_url = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={api_key}&maxwidth=400&maxheight=400'
+        response_photo = requests.request("GET",photo_url).url
+        urls.append(response_photo)
+
+    return {'images':[urls]}
 
 @app.post("/predict")
 def upload_file(file: UploadFile = File(...)):
