@@ -1,21 +1,27 @@
 import requests
-import shutil
+from dotenv import load_dotenv, find_dotenv
+import os
 
-def get_photo(city):
-    #the response of this is a JSON file that generates a photo reference
-    api_key = "AIzaSyD5pwvqobmq3KCcl2jJ0B2gf0Yci_EScyw"
-    url = f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={city}&key={api_key}&inputtype=textquery&fields=name,photos'
-    response = requests.request("GET", url).json()
+env_path = find_dotenv()
+load_dotenv(env_path)
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
-    #the reference that we need to get the photo
-    photo_ref = response["candidates"][0]["photos"][0]["photo_reference"]
 
-    #make another request for a photo response
-    photo_url = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={api_key}&maxwidth=400&maxheight=400'
-    response_photo = requests.request("GET",photo_url, stream=True)
+def get_photo(cities):
+    urls = []
+    for city in cities:
+        #the response of this is a JSON file that generates a photo reference
+        url = f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={city}&key={GOOGLE_API_KEY}&inputtype=textquery&fields=name,photos'
+        response = requests.request("GET", url).json()
+        #the reference that we need to get the photo
+        photo_ref = response["candidates"][0]["photos"][0]["photo_reference"]
+        #make another request for a photo response and return url list
+        photo_url = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={GOOGLE_API_KEY}&maxwidth=400&maxheight=400'
+        response_photo = requests.request("GET",photo_url).url
+        urls.append(response_photo)
+    return urls
 
-    #save it
-    if response_photo.status_code == 200:
-        with open(f'{city}.png', 'wb') as f:
-            response_photo.raw.decode_content = True
-            shutil.copyfileobj(response_photo.raw, f)
+if __name__ == "__main__":
+    images = get_photo(["Bangkok","Singapore","Hanoi","Phuket"])
+    for url in images:
+        print(url)

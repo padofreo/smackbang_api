@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from smackbang.matches import get_matches
 from smackbang.twitter import analyze_tweet
 from smackbang.locations import get_city_location
+from smackbang.photos import get_photo
 from smackbang.preprocess import DateFormatter, DateEncoder, TimeFeaturesEncoder, haversine_vectorized, DistanceTransformer, duration_process, set_preproc_pipeline
 from textblob import TextBlob
 import tweepy
@@ -24,6 +25,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn import set_config
 import joblib
 import xgboost
+import requests
 
 app = FastAPI()
 
@@ -59,6 +61,16 @@ def twitter(keywords='Bangkok,New Zealand,Russia,Dhaka'):
     df = analyze_tweet(keywords_list)
     result  = df.to_dict()
     return result
+
+@app.get("/photos")
+def photos(cities='Bangkok,New Zealand,Russia,Dhaka'):
+    urls = []
+    cities = cities.split(",")
+    photos = get_photo(cities)
+    for url in photos:
+        urls.append(url)
+
+    return {'Images':urls}
 
 @app.post("/predict")
 def upload_file(file: UploadFile = File(...)):
