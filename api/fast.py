@@ -25,6 +25,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn import set_config
 import joblib
 import xgboost
+import requests
 
 app = FastAPI()
 
@@ -62,21 +63,14 @@ def twitter(keywords='Bangkok,New Zealand,Russia,Dhaka'):
     return result
 
 @app.get("/photos")
-def twitter(cities='Bangkok,New Zealand,Russia,Dhaka'):
+def photos(cities='Bangkok,New Zealand,Russia,Dhaka'):
     urls = []
-    for city in cities:
-        #the response of this is a JSON file that generates a photo reference
-        api_key = "AIzaSyCMMb6QvT3xndUa0Phh5o2S2NWhmAKa5-A"
-        url = f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={city}&key={api_key}&inputtype=textquery&fields=name,photos'
-        response = requests.request("GET", url).json()
-        #the reference that we need to get the photo
-        photo_ref = response["candidates"][0]["photos"][0]["photo_reference"]
-        #make another request for a photo response and return url list
-        photo_url = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={api_key}&maxwidth=400&maxheight=400'
-        response_photo = requests.request("GET",photo_url).url
-        urls.append(response_photo)
+    cities = cities.split(",")
+    photos = get_photo(cities)
+    for url in photos:
+        urls.append(url)
 
-    return {'images':[urls]}
+    return {'Images':urls}
 
 @app.post("/predict")
 def upload_file(file: UploadFile = File(...)):

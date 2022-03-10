@@ -47,5 +47,3 @@ textblob
 tweepy
 matplotlib
 geopy
-
-#photos
